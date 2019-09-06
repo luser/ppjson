@@ -1,6 +1,3 @@
-extern crate json_color;
-extern crate pager;
-
 use json_color::Colorizer;
 use pager::Pager;
 use std::env;
@@ -9,7 +6,8 @@ use std::io::{self, Read};
 use std::process;
 
 fn read_input<R>(reader: &mut R) -> io::Result<String>
-    where R: Read,
+where
+    R: Read,
 {
     let mut s = String::new();
     reader.read_to_string(&mut s)?;
@@ -18,6 +16,23 @@ fn read_input<R>(reader: &mut R) -> io::Result<String>
 
 fn work() -> io::Result<()> {
     let input = match env::args_os().nth(1) {
+        Some(ref arg) if arg == "--help" => {
+            print!(
+                "JSON pretty printer
+
+USAGE:
+    ppjson [PATH]
+
+Pretty print the contents of the JSON file at PATH including colorizing the output
+and piping it through a pager. If PATH is not provided read a JSON file from stdin.
+"
+            );
+            return Ok(());
+        }
+        Some(ref arg) if arg == "--version" => {
+            println!("ppjson {}", env!("CARGO_PKG_VERSION"));
+            return Ok(());
+        }
         Some(filename) => {
             let mut f = File::open(&filename)?;
             read_input(&mut f)?
@@ -27,6 +42,7 @@ fn work() -> io::Result<()> {
             read_input(&mut stdin)?
         }
     };
+    //TODO: figure out something useful for Windows.
     Pager::with_pager("less -FRSX").setup();
     let colorizer = Colorizer::arbitrary();
     let mut stdout = io::stdout();
