@@ -1,10 +1,10 @@
 [package]
+authors = ["Ted Mielczarek <ted@mielczarek.org>"]
+edition = "2018"
+license = "Apache-2.0/MIT"
 name = "ppjson"
 version = "0.1.0"
-authors = ["Ted Mielczarek <ted@mielczarek.org>"]
-license = "Apache-2.0/MIT"
-edition = "2018"
-
 [dependencies]
+colored = "1.9.0"
 json-color = "0.7.1"
 pager = "0.14.0"

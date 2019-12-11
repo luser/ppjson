@@ -2,7 +2,7 @@ use json_color::Colorizer;
 use pager::Pager;
 use std::env;
 use std::fs::File;
-use std::io::{self, Read};
+use std::io::{self, Read, Write};
 use std::process;
 
 fn read_input<R>(reader: &mut R) -> io::Result<String>
@@ -42,12 +42,14 @@ and piping it through a pager. If PATH is not provided read a JSON file from std
             read_input(&mut stdin)?
         }
     };
+    // I don't like this but what can you do?
+    colored::control::set_override(true);
     //TODO: figure out something useful for Windows.
     Pager::with_pager("less -FRSX").setup();
     let colorizer = Colorizer::arbitrary();
     let mut stdout = io::stdout();
     colorizer.colorize_to_writer(&input, &mut stdout)?;
-    println!("");
+    writeln!(&mut stdout, "")?;
     Ok(())
 }
 
@@ -55,7 +57,9 @@ fn main() {
     match work() {
         Ok(_) => {}
         Err(e) => {
-            eprintln!("{}", e);
+            if e.kind() != io::ErrorKind::BrokenPipe {
+                eprintln!("{}", e);
+            }
             process::exit(1);
         }
     }
