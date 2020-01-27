@@ -4,6 +4,7 @@ edition = "2018"
 license = "Apache-2.0/MIT"
 name = "ppjson"
 version = "0.1.0"
+
 [dependencies]
 colored = "1.9.0"
 json-color = "0.7.1"

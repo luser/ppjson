@@ -47,9 +47,10 @@ and piping it through a pager. If PATH is not provided read a JSON file from std
     //TODO: figure out something useful for Windows.
     Pager::with_pager("less -FRSX").setup();
     let colorizer = Colorizer::arbitrary();
-    let mut stdout = io::stdout();
-    colorizer.colorize_to_writer(&input, &mut stdout)?;
-    writeln!(&mut stdout, "")?;
+    let stdout = io::stdout();
+    let mut lock = stdout.lock();
+    colorizer.colorize_to_writer(&input, &mut lock)?;
+    writeln!(&mut lock, "")?;
     Ok(())
 }
 
